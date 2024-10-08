@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { WebSocket } from "ws";
 
 export interface UserFields {
   username: string;
@@ -6,6 +7,7 @@ export interface UserFields {
   token: string;
   __confirmPassword: string;
   displayName: string;
+  isActive: boolean;
 }
 
 export interface UserVirtuals {
@@ -19,12 +21,50 @@ export interface UserMethods {
 
 export type UserModel = Model<UserFields, {}, UserMethods, UserVirtuals>;
 
-export interface ChatMessage {
-  username: string;
+export interface messageMutation {
+  _id: mongoose.Type.ObjectId;
+  user: UserType;
   message: string;
+  date: Date;
+}
+
+export interface ActiveConnections {
+  [id: string]: WebSocket;
+}
+export interface OnlineUser {
+  _id: mongoose.Types.ObjectId | string;
+  displayName: string;
+  token: string;
+  isActive: boolean;
+  username: string;
+}
+
+export interface OnlineUsers {
+  [id: string]: OnlineUser;
+}
+
+export interface UserType {
+  _id: mongoose.Types.ObjectId;
+  username: string;
+  displayName: string;
+  token: string;
+  isActive: boolean;
 }
 
 export interface IncomingMessage {
   type: string;
-  payload: ChatMessage;
+  payload: {
+    _id: string;
+    user: UserType;
+    message: string;
+    date: Date;
+    receiver: UserType;
+  };
+}
+
+export interface messageMutation {
+  _id: mongoose.Type.ObjectId;
+  user: UserType;
+  message: string;
+  date: Date;
 }
