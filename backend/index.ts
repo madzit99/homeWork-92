@@ -4,11 +4,16 @@ import mongoose from "mongoose";
 import config from "./config";
 import cors from "cors";
 import userRouter from "./routers/users";
-import { ActiveConnections, IncomingMessage, OnlineUsers, messageMutation } from "./type";
-import { sendMessageToActive, sendOnlineUsers } from "./functions/functions";
+import {
+  ActiveConnections,
+  IncomingMessage,
+  OnlineUsers,
+  messageMutation,
+} from "./type";
+import { Welcome, WelcomeMessages, sendMessageToActive, sendOnlineUsers } from "./functions/functions";
 import Message from "./models/Message";
 import User from "./models/User";
-import { authWs } from "./middleware/auth";
+import { authWS } from "./middleware/auth";
 
 const app = express();
 expressWs(app);
@@ -35,12 +40,15 @@ chatRouter.ws("/chat", (ws, req) => {
     const parsedMessage = JSON.parse(message.toString()) as IncomingMessage;
 
     if (parsedMessage.type === "LOGIN") {
-      const user = await authWs(parsedMessage.payload.user.token);
+      const user = await authWS(parsedMessage.payload.user.token);
 
       if (user) {
         user.isActive = true;
         await user.save();
         console.log("Аутентификация прошла успешно");
+
+        Welcome(ws);
+        WelcomeMessages(ws);
 
         await sendOnlineUsers(activeConnections);
         users[id] = user;
@@ -99,4 +107,3 @@ const run = async () => {
 };
 
 void run();
-

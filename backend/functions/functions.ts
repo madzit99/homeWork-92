@@ -56,3 +56,21 @@ export const FindMessages = async () => {
   }
 };
 
+export const Welcome = (ws: WebSocket) => {
+  ws.send(
+    JSON.stringify({
+      type: "WELCOME",
+      payload: "Здравствуйте, вы подключились к чату!",
+    })
+  );
+};
+
+export const WelcomeMessages = async (ws: WebSocket) => {
+  ws.send(
+    JSON.stringify({
+      type: "MESSAGES",
+      payload: await FindMessages(),
+    })
+  );
+};
+

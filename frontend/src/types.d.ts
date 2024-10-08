@@ -37,3 +37,32 @@ export interface ValidationError {
 export interface GlobalError {
   error: string;
 }
+
+export interface Message {
+  _id: string;
+  user: User;
+  message: string;
+  date: number;
+  personal: boolean;
+}
+
+export interface IncomingWelcomeMessage {
+  type: "WELCOME";
+  payload: string;
+}
+
+export interface IncomingMessages {
+  type: "MESSAGES";
+  payload: Message[];
+}
+
+export interface IncomingChatMessage {
+  type: "NEW_MESSAGE";
+  payload: Message;
+}
+
+export interface incomingOnlineMessage {
+  type: "ONLINE";
+  users: User[];
+}
+
